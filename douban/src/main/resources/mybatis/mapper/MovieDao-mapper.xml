@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wbq.dao.MovieDao">
+    <!--获得top250电影信息-->
+    <select id="getTop250Movies" parameterType="string" resultType="com.wbq.dto.Movie">
+        SELECT
+        m.id,
+        m.movie_name movieName,
+        m.ranking,
+        m.score,
+        m.score_num scoreNum,
+        m.img,
+        m.comments_url commentsUrl,
+        m.image_path imagePath,
+        s.type movieType
+        from movie m
+        inner join summary s on m.image_path=s.image_path
+        <where>
+            <if test="movieName!=null and movieName!=''">
+                AND m.movie_name LIKE concat('%',#{movieName},'%')
+            </if>
+            <if test="movieType != null and movieType != ''">
+                AND s.type LIKE concat('%',#{movieType},'%')
+            </if>
+        </where>
+        ORDER BY ranking
+    </select>
+    <!--获得正在热映电影信息-->
+    <select id="getNowPlayingMovies" parameterType="string" resultType="com.wbq.dto.Movie">
+        SELECT
+        m.id,
+        m.name movieName,
+        m.score,
+        m.movie_num movieNum,
+        m.score_num scoreNum,
+        m.movie_url commentsUrl,
+        m.image_path imagePath,
+        s.type movieType
+        from now_playing_movie m
+        inner join summary s on m.image_path=s.image_path
+        <where>
+            <if test="movieName!=null and movieName!=''">
+                AND m.name LIKE concat('%',#{movieName},'%')
+            </if>
+            <if test="movieType != null and movieType != ''">
+                AND s.type LIKE concat('%',#{movieType},'%')
+            </if>
+        </where>
+    </select>
+    <!--获得将要上映电影信息-->
+    <select id="getCommingMovies" parameterType="string" resultType="com.wbq.dto.Movie">
+        SELECT
+        m.id,
+        m.movie_name movieName,
+        m.want_watch_num wantWatchNum,
+        m.area,
+        m.summary_url commentsUrl,
+        s.image_path imagePath,
+        m.movie_type movieType
+        from comming_movie m
+        inner join summary s on s.name like CONCAT(m.movie_name,'%')
+        <where>
+            <if test="movieName!=null and movieName!=''">
+                AND m.movie_name LIKE concat('%',#{movieName},'%')
+            </if>
+            <if test="movieType != null and movieType != ''">
+                AND m.movie_type LIKE concat('%',#{movieType},'%')
+            </if>
+        </where>
+    </select>
+    <select id="getMovieHotComments" parameterType="String" resultType="com.wbq.dto.DoubanComment">
+        SELECT
+        name,
+        date,
+        star,
+        comment
+        FROM douban_comment
+        <where>
+            <if test="commentUrl != null and commentUrl != ''">
+                AND comment_url=#{commentUrl}
+            </if>
+        </where>
+        ORDER BY star DESC
+    </select>
+
+    <select id="getMovieSummary" parameterType="String" resultType="com.wbq.dto.Summary">
+        SELECT
+        name,
+        image_path imagePath,
+        director,
+        screenwriter,
+        actor,
+        type,
+        released_date releasedDate,
+        length,
+        summary,
+        score,
+        score_num scoreNum
+        FROM summary
+        <where>
+            <if test="movieName != null and movieName != ''">
+                and name LIKE concat(#{movieName},'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="getScoreChart" parameterType="string" resultType="com.wbq.dto.Summary">
+        SELECT
+        star_1 star1,
+        star_2 star2,
+        star_3 star3,
+        star_4 star4,
+        star_5 star5,
+        better_1 better1,
+        better_2 better2
+        from summary
+        <where>
+            <if test="movieName != null and movieName != ''">
+                and name LIKE concat(#{movieName},'%')
+            </if>
+        </where>
+    </select>
+    <insert id="addMovieToCollection" parameterType="string">
+        insert into collection(name,label) VALUES (#{name},null)
+    </insert>
+    <select id="getAllCollectionMovie" parameterType="string" resultType="com.wbq.dto.Collection">
+        select name,label from collection
+        <where>
+            <if test="name != null and name != ''">
+                and name like concat(#{name},'%')
+            </if>
+            <if test="label !=null and label != ''">
+                and label like concat('%',#{label},'%')
+            </if>
+        </where>
+    </select>
+    <select id="getCollectionByMovieName" parameterType="string" resultType="com.wbq.dto.Collection">
+        select name,label from collection
+        where name=#{name}
+    </select>
+    <update id="updateCollection" parameterType="string">
+        update collection set label=#{label} where name=#{name}
+    </update>
+    <delete id="deleteColleciton" parameterType="string">
+        delete from collection where name=#{name}
+    </delete>
+</mapper>
