@@ -1,0 +1,49 @@
+<!--
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+                        http://www.springframework.org/schema/context
+                        http://www.springframework.org/schema/context/spring-context-3.1.xsd
+                        http://www.springframework.org/schema/mvc
+                        http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
+    &lt;!&ndash;自动扫描&ndash;&gt;
+    <context:component-scan base-package="com.wbq"/>
+    &lt;!&ndash;引入配置文件&ndash;&gt;
+    <context:property-placeholder location="classpath:jdbc.properties"/>
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+        &lt;!&ndash;初始化连接大小&ndash;&gt;
+        <property name="initialSize" value="${initialSize}"/>
+        &lt;!&ndash;连接池最大数量&ndash;&gt;
+        <property name="maxActive" value="${maxActive}"/>
+        &lt;!&ndash;连接池最大空闲线程数&ndash;&gt;
+        <property name="maxIdle" value="${maxIdle}"/>
+        &lt;!&ndash;连接池最小空闲线程数&ndash;&gt;
+        <property name="minIdle" value="${minIdle}"/>
+        &lt;!&ndash;获取连接等待超时时间&ndash;&gt;
+        <property name="maxWait" value="${maxWait}"/>
+    </bean>
+    &lt;!&ndash;配置sqlSessionFactory对象&ndash;&gt;
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        &lt;!&ndash; 配置mybatis全局配置文件:mybatis-config.xml&ndash;&gt;
+        <property name="configLocation" value="classpath:mybatis-config.xml"/>
+        &lt;!&ndash;扫描mapper需要的xml文件 &ndash;&gt;
+        <property name="mapperLocations" value="classpath:mybatis/mapper/*.xml"/>
+    </bean>
+    &lt;!&ndash;扫描dao接口包，动态实现dao接口，注入spring容器中&ndash;&gt;
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        &lt;!&ndash;注入是sqlSessionFactory&ndash;&gt;
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+        &lt;!&ndash;需要扫描的包&ndash;&gt;
+        <property name="basePackage" value="com.wbq.dao"/>
+    </bean>
+
+</beans>-->
